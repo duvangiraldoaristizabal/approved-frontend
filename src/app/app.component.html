@@ -1,0 +1,13 @@
+<header class="topbar">
+  <a class="brand" routerLink="/requests">Approved</a>
+  <nav aria-label="Navegacion principal">
+    <a routerLink="/requests" routerLinkActive="active">Solicitudes</a>
+    <a routerLink="/requests/new" routerLinkActive="active">Nueva solicitud</a>
+  </nav>
+  <label class="user-picker"><span>Usuario activo</span>
+    <select [value]="session.user()" (change)="changeUser($event)">
+      @for (user of users; track user) { <option [value]="user">{{ user }}</option> }
+    </select>
+  </label>
+</header>
+<main><router-outlet /></main>

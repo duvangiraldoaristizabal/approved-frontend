@@ -1,9 +1,18 @@
-.topbar { min-height: 64px; padding: 0 32px; display: flex; align-items: center; gap: 32px; border-bottom: 1px solid #d9dee5; background: #fff; }
+.topbar { min-height: 72px; padding: 0 32px; display: flex; align-items: center; gap: 20px; border-bottom: 1px solid #d9dee5; background: #fff; }
 .brand { color: #17212b; font-size: 21px; font-weight: 800; text-decoration: none; }
 nav { display: flex; gap: 8px; flex: 1; }
 nav a { padding: 9px 12px; color: #536170; text-decoration: none; border-bottom: 2px solid transparent; }
 nav a.active { color: #075e54; border-color: #075e54; }
-.user-picker { display: flex; align-items: center; gap: 10px; color: #536170; font-size: 13px; }
-select { min-height: 36px; border: 1px solid #b8c1cc; border-radius: 4px; padding: 0 30px 0 10px; background: white; }
+.login-form, .session-chip { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.login-form label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: #536170; }
+.login-form input, .login-form select, .session-chip { min-height: 36px; border: 1px solid #b8c1cc; border-radius: 6px; background: white; }
+.login-form input, .login-form select { padding: 0 10px; }
+button { min-height: 36px; border: none; border-radius: 6px; padding: 0 14px; background: #075e54; color: white; cursor: pointer; }
+button:disabled { opacity: 0.6; cursor: wait; }
+.ghost { background: #eef3f8; color: #17212b; }
+.error { color: #b42318; font-size: 12px; }
+.welcome-card { margin: 48px auto; max-width: 620px; padding: 32px; border: 1px solid #d9dee5; border-radius: 16px; background: #f8fafc; }
+.welcome-card h1 { margin: 0 0 8px; }
+.welcome-card p { margin: 0; color: #536170; }
 main { max-width: 1160px; margin: 0 auto; padding: 32px; }
-@media (max-width: 700px) { .topbar { padding: 16px; flex-wrap: wrap; gap: 12px; } nav { order: 3; flex-basis: 100%; } .user-picker span { display: none; } main { padding: 20px 16px; } }
+@media (max-width: 700px) { .topbar { padding: 16px; flex-wrap: wrap; gap: 12px; } nav { order: 3; flex-basis: 100%; } .login-form, .session-chip { width: 100%; flex-wrap: wrap; margin-left: 0; } .login-form label { width: 100%; } main { padding: 20px 16px; } }

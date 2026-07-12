@@ -9,5 +9,20 @@ export class RequestListComponent {
   readonly requests = signal<ApprovalRequest[]>([]); readonly loading = signal(true); readonly error = signal(''); readonly status = signal<RequestStatus | ''>('PENDING');
   constructor(private readonly api: ApprovalApiService, readonly session: SessionService) { effect(() => { this.session.user(); this.status(); this.load(); }); }
   setStatus(event: Event): void { this.status.set((event.target as HTMLSelectElement).value as RequestStatus | ''); }
-  private load(): void { this.loading.set(true); this.error.set(''); this.api.list({ approver: this.session.user(), status: this.status() || undefined }).subscribe({ next: data => { this.requests.set(data); this.loading.set(false); }, error: () => { this.error.set('No fue posible cargar las solicitudes.'); this.loading.set(false); } }); }
+  private load(): void {
+    const user = this.session.user();
+    if (!this.session.authenticated() || !user) {
+      this.requests.set([]);
+      this.loading.set(false);
+      this.error.set('');
+      return;
+    }
+
+    this.loading.set(true);
+    this.error.set('');
+    this.api.list({ approver: user, status: this.status() || undefined }).subscribe({
+      next: data => { this.requests.set(data); this.loading.set(false); },
+      error: () => { this.error.set('No fue posible cargar las solicitudes.'); this.loading.set(false); },
+    });
+  }
 }

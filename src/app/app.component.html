@@ -1,13 +1,36 @@
 <header class="topbar">
   <a class="brand" routerLink="/requests">Approved</a>
-  <nav aria-label="Navegacion principal">
-    <a routerLink="/requests" routerLinkActive="active">Solicitudes</a>
-    <a routerLink="/requests/new" routerLinkActive="active">Nueva solicitud</a>
-  </nav>
-  <label class="user-picker"><span>Usuario activo</span>
-    <select [value]="session.user()" (change)="changeUser($event)">
-      @for (user of users; track user) { <option [value]="user">{{ user }}</option> }
-    </select>
-  </label>
+  @if (session.authenticated()) {
+    <nav aria-label="Navegacion principal">
+      <a routerLink="/requests" routerLinkActive="active">Solicitudes</a>
+      <a routerLink="/requests/new" routerLinkActive="active">Nueva solicitud</a>
+    </nav>
+    <div class="session-chip">
+      <span>{{ session.user() }}</span>
+      <button class="ghost" type="button" (click)="logout()">Salir</button>
+    </div>
+  } @else {
+    <form class="login-form" (submit)="$event.preventDefault(); login()">
+      <label>Usuario
+        <select [value]="username()" (change)="changeUser($event)">
+          @for (user of users; track user) { <option [value]="user">{{ user }}</option> }
+        </select>
+      </label>
+      <label>Contraseña
+        <input [value]="password()" (input)="password.set($any($event.target).value)" type="password" autocomplete="current-password" />
+      </label>
+      <button type="submit" [disabled]="loggingIn()">{{ loggingIn() ? 'Ingresando...' : 'Ingresar' }}</button>
+      @if (loginError()) { <small class="error">{{ loginError() }}</small> }
+    </form>
+  }
 </header>
-<main><router-outlet /></main>
+<main>
+  @if (session.authenticated()) {
+    <router-outlet />
+  } @else {
+    <section class="welcome-card">
+      <h1>Bienvenido a Approved</h1>
+      <p>Inicia sesión con tu usuario y la misma contraseña para acceder a la bandeja de aprobación.</p>
+    </section>
+  }
+</main>

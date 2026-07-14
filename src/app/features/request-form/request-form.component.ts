@@ -8,11 +8,12 @@ import { SessionService } from '../../core/session.service';
 export class RequestFormComponent {
   readonly saving = signal(false); readonly error = signal(''); readonly form;
   constructor(fb: FormBuilder, private readonly api: ApprovalApiService, private readonly router: Router, session: SessionService) {
+    const corporateEmail = Validators.pattern(/^[a-zA-Z0-9._-]+@bancobogota\.com$/i);
     this.form = fb.nonNullable.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(120)]],
       description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(2000)]],
-      requester: [session.user() || '', [Validators.required, Validators.minLength(3)]],
-      approver: ['', [Validators.required, Validators.minLength(3)]],
+      requester: [session.user() || '', [Validators.required, Validators.email, corporateEmail]],
+      approver: ['', [Validators.required, Validators.email, corporateEmail]],
       type: ['DEPLOYMENT' as RequestType, Validators.required],
     });
   }

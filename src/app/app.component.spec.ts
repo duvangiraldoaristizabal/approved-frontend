@@ -18,7 +18,9 @@ describe('AppComponent', () => {
   it('changes the simulated network user', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const session = TestBed.inject(SessionService);
-    fixture.componentInstance.changeUser({ target: { value: 'ana.dev' } } as unknown as Event);
-    expect(session.user()).toBe('ana.dev');
+    fixture.componentInstance.changeUser({ target: { value: 'ana.dev@bancobogota.com' } } as unknown as Event);
+    expect(fixture.componentInstance.username()).toBe('ana.dev@bancobogota.com');
+    expect(fixture.componentInstance.password()).toBe('ana.dev');
+    expect(session.user()).toBe('');
   });
 });

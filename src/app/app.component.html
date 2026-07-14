@@ -1,7 +1,7 @@
 <header class="topbar">
   <a class="brand" routerLink="/requests">Approved</a>
   @if (session.authenticated()) {
-    <nav aria-label="Navegacion principal">
+    <nav aria-label="Navegación principal">
       <a routerLink="/requests" routerLinkActive="active">Solicitudes</a>
       <a routerLink="/requests/new" routerLinkActive="active">Nueva solicitud</a>
     </nav>
@@ -30,7 +30,7 @@
   } @else {
     <section class="welcome-card">
       <h1>Bienvenido a Approved</h1>
-      <p>Inicia sesión con tu usuario y la misma contraseña para acceder a la bandeja de aprobación.</p>
+      <p>Inicia sesión con tu correo &#64;bancobogota.com. La contraseña de prueba es la parte anterior al arroba.</p>
     </section>
   }
 </main>

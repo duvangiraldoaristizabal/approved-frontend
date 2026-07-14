@@ -1,3 +1,80 @@
-<section class="heading"><div><p class="eyebrow">Bandeja de aprobacion</p><h1>Solicitudes de {{ session.user() }}</h1></div><a class="primary" routerLink="/requests/new">+ Nueva solicitud</a></section>
-<div class="toolbar"><label>Estado <select [value]="status()" (change)="setStatus($event)"><option value="">Todos</option><option value="PENDING">Pendientes</option><option value="APPROVED">Aprobadas</option><option value="REJECTED">Rechazadas</option></select></label><span>{{ requests().length }} resultados</span></div>
-@if (loading()) { <p class="state">Cargando solicitudes...</p> } @else if (error()) { <p class="state error">{{ error() }}</p> } @else if (!requests().length) { <div class="empty"><h2>Sin solicitudes</h2><p>No hay elementos para el usuario y estado seleccionados.</p></div> } @else { <div class="table-wrap"><table><thead><tr><th>Solicitud</th><th>Tipo</th><th>Solicitante</th><th>Fecha</th><th>Estado</th><th></th></tr></thead><tbody>@for (request of requests(); track request.id) { <tr><td><strong>{{ request.title }}</strong><small>#{{ request.id.slice(0, 8) }}</small></td><td>{{ request.type }}</td><td>{{ request.requester }}</td><td>{{ request.createdAt | date:'dd/MM/yyyy HH:mm' }}</td><td><span class="badge" [class]="request.status.toLowerCase()">{{ request.status }}</span></td><td><a class="detail" [routerLink]="['/requests', request.id]">Ver detalle</a></td></tr> }</tbody></table></div> }
+<section class="inbox-heading">
+  <div>
+    <p class="eyebrow">Bandeja de aprobación</p>
+    <h1>Recibidos</h1>
+    <p class="subtitle">Solicitudes asignadas a {{ session.user() }}</p>
+  </div>
+  <a class="primary" routerLink="/requests/new">
+    <span aria-hidden="true">＋</span>
+    Nueva solicitud
+  </a>
+</section>
+
+<section class="inbox" aria-label="Bandeja de solicitudes">
+  <header class="inbox-toolbar">
+    <div class="filter-tabs" role="group" aria-label="Filtrar solicitudes por estado">
+      <button type="button" [class.active]="status() === 'PENDING'" (click)="setStatusValue('PENDING')">
+        Pendientes
+      </button>
+      <button type="button" [class.active]="status() === ''" (click)="setStatusValue('')">
+        Todas
+      </button>
+      <button type="button" [class.active]="status() === 'APPROVED'" (click)="setStatusValue('APPROVED')">
+        Aprobadas
+      </button>
+      <button type="button" [class.active]="status() === 'REJECTED'" (click)="setStatusValue('REJECTED')">
+        Rechazadas
+      </button>
+    </div>
+    <div class="toolbar-meta">
+      <span class="result-count">{{ requests().length }} {{ requests().length === 1 ? 'solicitud' : 'solicitudes' }}</span>
+      <button class="refresh" type="button" (click)="refresh()" [disabled]="loading()" aria-label="Actualizar bandeja" title="Actualizar bandeja">↻</button>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="state" aria-live="polite"><span class="spinner"></span>Cargando solicitudes...</div>
+  } @else if (error()) {
+    <div class="state error">
+      <span class="state-icon" aria-hidden="true">!</span>
+      <strong>No pudimos abrir la bandeja</strong>
+      <p>{{ error() }}</p>
+    </div>
+  } @else if (!requests().length) {
+    <div class="state empty">
+      <span class="empty-icon" aria-hidden="true">✓</span>
+      <strong>Todo al día</strong>
+      <p>No hay solicitudes en esta categoría.</p>
+    </div>
+  } @else {
+    <div class="message-list">
+      @for (request of requests(); track request.id) {
+        <a
+          class="message-row"
+          [class.unread]="request.status === 'PENDING'"
+          [routerLink]="['/requests', request.id]"
+          [attr.aria-label]="'Abrir solicitud ' + request.title"
+        >
+          <span class="status-dot" [class]="request.status.toLowerCase()" aria-hidden="true"></span>
+          <span class="avatar" aria-hidden="true">{{ request.requester.charAt(0) }}</span>
+          <span class="sender">
+            <strong>{{ request.requester }}</strong>
+            <small>para {{ request.approver }}</small>
+          </span>
+          <span class="message-copy">
+            <span class="subject-line">
+              <strong>{{ request.title }}</strong>
+              <span class="type">{{ typeLabel(request.type) }}</span>
+            </span>
+            <span class="preview">{{ request.description }}</span>
+          </span>
+          <span class="message-meta">
+            <time [attr.datetime]="request.createdAt">{{ request.createdAt | date:'dd MMM' }}</time>
+            <span class="badge" [class]="request.status.toLowerCase()">{{ statusLabel(request.status) }}</span>
+          </span>
+          <span class="chevron" aria-hidden="true">›</span>
+        </a>
+      }
+    </div>
+  }
+</section>

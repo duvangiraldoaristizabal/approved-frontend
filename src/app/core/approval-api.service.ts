@@ -58,6 +58,6 @@ export class ApprovalApiService {
     const token = this.session.token();
     if (token) return of(token);
 
-    return this.login(user, user).pipe(map(({ token }) => token));
+    return this.login(user, user.split('@')[0]).pipe(map(({ token }) => token));
   }
 }

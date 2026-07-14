@@ -10,8 +10,13 @@ import { SessionService } from './core/session.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  readonly users = ['juan.lead', 'maria.dev', 'ana.dev', 'luis.lead'];
-  readonly username = signal('juan.lead');
+  readonly users = [
+    'juan.lead@bancobogota.com',
+    'maria.dev@bancobogota.com',
+    'ana.dev@bancobogota.com',
+    'luis.lead@bancobogota.com',
+  ];
+  readonly username = signal(this.users[0]);
   readonly password = signal('juan.lead');
   readonly loginError = signal('');
   readonly loggingIn = signal(false);
@@ -21,7 +26,7 @@ export class AppComponent {
   changeUser(event: Event): void {
     const nextUser = (event.target as HTMLSelectElement).value;
     this.username.set(nextUser);
-    this.password.set(nextUser);
+    this.password.set(nextUser.split('@')[0]);
   }
 
   login(): void {
